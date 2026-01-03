@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +15,7 @@
             --glow: 0 0 10px rgba(0, 255, 65, 0.5);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Share Tech Mono', monospace;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Share Tech Mono', monospace; }
 
         body {
             background-color: var(--dark-bg);
@@ -30,18 +26,16 @@
 
         #matrix-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
+            top: 0; left: 0; z-index: -1;
             opacity: 0.2;
         }
 
-        /* --- ACCESS LOCK SCREEN --- */
-        #access-screen {
+        /* Access Screens */
+        .screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: black;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -50,132 +44,66 @@
             text-align: center;
         }
 
-        .lock-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            animation: pulse 1.5s infinite;
-        }
+        .active-screen { display: flex; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        .lock-icon { font-size: 50px; margin-bottom: 20px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
         .input-box {
-            background: transparent;
-            border: 2px solid var(--neon-green);
-            color: var(--neon-green);
-            padding: 15px;
-            font-size: 1.2rem;
-            text-align: center;
-            outline: none;
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 20px;
-            box-shadow: var(--glow);
+            background: transparent; border: 2px solid var(--neon-green);
+            color: var(--neon-green); padding: 15px; font-size: 1.2rem;
+            text-align: center; outline: none; width: 100%; max-width: 300px;
+            margin-bottom: 20px; box-shadow: var(--glow);
         }
 
-        .verify-btn {
-            background: var(--neon-green);
-            color: black;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            letter-spacing: 2px;
+        .btn {
+            background: var(--neon-green); color: black; border: none;
+            padding: 15px 40px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; letter-spacing: 2px; text-transform: uppercase;
         }
 
-        #error-msg {
-            color: var(--off-red);
-            margin-top: 15px;
-            font-weight: bold;
-            display: none;
-        }
+        #error-msg { color: var(--off-red); margin-top: 15px; font-weight: bold; display: none; }
 
-        /* --- DASHBOARD (Hidden by default) --- */
-        #main-content {
-            display: none;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        .header {
-            text-align: center;
-            padding: 15px;
-            background: rgba(0, 20, 0, 0.8);
-            border-bottom: 2px solid var(--neon-green);
-        }
-
-        .main-title {
-            font-size: 1.5rem;
-            letter-spacing: 3px;
-            animation: glitch 2s infinite;
-        }
-
+        /* Dashboard Area */
+        #main-content { display: none; flex-direction: column; height: 100vh; }
+        .header { text-align: center; padding: 15px; border-bottom: 2px solid var(--neon-green); background: #000; }
+        .main-title { font-size: 1.4rem; letter-spacing: 2px; animation: glitch 2s infinite; }
+        
         @keyframes glitch {
-            0% { transform: skew(0deg); }
+            0%, 100% { transform: skew(0); }
             20% { transform: skew(-3deg); text-shadow: 2px 0 red; }
             25% { transform: skew(3deg); text-shadow: -2px 0 blue; }
-            30% { transform: skew(0deg); }
         }
 
-        .terminal-container {
-            width: 95%;
-            margin: 10px auto;
-            height: 100px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--neon-green);
-            padding: 8px;
-            font-size: 0.7rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column-reverse;
+        .terminal {
+            width: 95%; margin: 10px auto; height: 100px;
+            background: rgba(0,0,0,0.9); border: 1px solid var(--neon-green);
+            padding: 8px; font-size: 0.7rem; overflow-y: auto;
+            display: flex; flex-direction: column-reverse;
         }
 
-        .panel {
-            flex: 1;
-            width: 95%;
-            margin: 0 auto;
-            overflow-y: auto;
-            padding-bottom: 80px;
-        }
-
+        .panel { flex: 1; width: 95%; margin: 0 auto; overflow-y: auto; padding-bottom: 80px; }
         .feature-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            margin-bottom: 8px;
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid rgba(0, 255, 65, 0.2);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; margin-bottom: 8px; background: rgba(0,255,65,0.05);
+            border: 1px solid rgba(0,255,65,0.2);
         }
 
-        /* Toggle Switches */
+        /* Toggles */
         .switch { position: relative; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333; border: 1px solid var(--off-red); transition: .3s; border-radius: 34px;
+            background: #333; border: 1px solid var(--off-red); transition: .3s; border-radius: 34px;
         }
         .slider:before {
             position: absolute; content: ""; height: 18px; width: 18px;
-            left: 4px; bottom: 3px; background-color: var(--off-red); transition: .3s; border-radius: 50%;
+            left: 4px; bottom: 3px; background: var(--off-red); transition: .3s; border-radius: 50%;
         }
-        input:checked + .slider { background-color: rgba(0, 255, 65, 0.2); border: 1px solid var(--neon-green); }
-        input:checked + .slider:before { transform: translateX(22px); background-color: var(--neon-green); }
+        input:checked + .slider { background: rgba(0,255,65,0.2); border-color: var(--neon-green); }
+        input:checked + .slider:before { transform: translateX(22px); background: var(--neon-green); }
 
-        .footer {
-            position: fixed; bottom: 0; width: 100%;
-            padding: 15px; background: black; border-top: 1px solid var(--neon-green);
-        }
-
-        .connect-btn {
-            width: 100%; background: transparent; color: var(--neon-green);
-            border: 2px solid var(--neon-green); padding: 12px; font-weight: bold;
-        }
-
+        .footer { position: fixed; bottom: 0; width: 100%; padding: 15px; background: black; border-top: 1px solid var(--neon-green); }
         .log-success { color: white; text-shadow: 0 0 5px var(--neon-green); }
         .log-error { color: var(--off-red); }
     </style>
@@ -184,29 +112,33 @@
 
     <canvas id="matrix-canvas"></canvas>
 
-    <!-- 1. KEY ACCESS SCREEN -->
-    <div id="access-screen">
+    <!-- SCREEN 1: LOCK -->
+    <div id="lock-screen" class="screen active-screen">
         <div class="lock-icon">🔒</div>
         <h2 style="margin-bottom: 20px; letter-spacing: 5px;">SYSTEM LOCKED</h2>
-        <input type="text" id="keyInput" class="input-box" placeholder="ENTER ACCESS KEY">
-        <button class="verify-btn" onclick="checkKey()">INITIALIZE</button>
-        <p id="error-msg">INVALID ACCESS KEY! ACCESS DENIED.</p>
-        <p style="margin-top: 30px; font-size: 0.7rem; color: #444;">mewhack secure protocol v4.0</p>
+        <input type="text" id="keyInput" class="input-box" placeholder="ENTER KEY">
+        <button class="btn" onclick="handleKey()">INITIALIZE</button>
+        <p id="error-msg">INVALID KEY! ACCESS DENIED.</p>
     </div>
 
-    <!-- 2. MAIN HACKING DASHBOARD -->
+    <!-- SCREEN 2: DECRYPTING ANIMATION -->
+    <div id="loading-screen" class="screen">
+        <h1 style="letter-spacing: 5px;">DECRYPTING...</h1>
+        <p style="margin-top:20px; color:var(--neon-green)" id="load-msg">Bypassing security layers...</p>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
     <div id="main-content">
         <div class="header">
-            <div style="font-size: 0.8rem; color: white;">NAME: MEWHACK</div>
+            <div style="font-size: 0.7rem; color: #888;">ID: MEWHACK_V4</div>
             <div class="main-title">COD :: PRIVATE ACCESS</div>
         </div>
 
-        <div class="terminal-container" id="terminal">
-            <div>> ENCRYPTION_LAYER_6_DECRYPTED...</div>
+        <div class="terminal" id="terminal">
+            <div>> SYSTEM READY...</div>
         </div>
 
         <div class="panel">
-            <!-- Features -->
             <div class="feature-item"><span>Wall Hack</span><label class="switch"><input type="checkbox" onchange="toggleF(this, 'Wall Hack')"><span class="slider"></span></label></div>
             <div class="feature-item"><span>Aim Lock</span><label class="switch"><input type="checkbox" onchange="toggleF(this, 'Aim Lock')"><span class="slider"></span></label></div>
             <div class="feature-item"><span>No Recoil</span><label class="switch"><input type="checkbox" onchange="toggleF(this, 'No Recoil')"><span class="slider"></span></label></div>
@@ -218,89 +150,100 @@
         </div>
 
         <div class="footer">
-            <button class="connect-btn" id="conBtn" onclick="connect()">CONNECT SERVER</button>
-            <div id="timer" style="text-align: center; margin-top: 5px; font-size: 0.9rem;"></div>
+            <button class="btn" id="conBtn" style="width:100%; background:transparent; color:var(--neon-green); border:1px solid var(--neon-green);" onclick="handleConnect()">CONNECT SERVER</button>
+            <div id="timer" style="text-align: center; margin-top: 8px; font-size: 0.8rem;"></div>
         </div>
     </div>
 
     <script>
-        // Matrix Background Logic
+        const directLink = "https://www.effectivegatecpm.com/g4d5kg4qaf?key=406777624267375092c77834ed0b8246";
+        
+        // Matrix Effect
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const chars = "010101010101ABCDEF";
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const drops = Array(Math.floor(canvas.width/10)).fill(1);
         function drawM() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = '#0f0';
             drops.forEach((y, i) => {
-                const text = chars[Math.floor(Math.random()*chars.length)];
-                ctx.fillText(text, i*10, y*10);
+                ctx.fillText(Math.floor(Math.random()*2), i*10, y*10);
                 if(y*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             });
         }
         setInterval(drawM, 50);
 
-        // --- KEY VERIFICATION LOGIC ---
-        function checkKey() {
-            const input = document.getElementById('keyInput').value;
-            const error = document.getElementById('error-msg');
-            const lockScreen = document.getElementById('access-screen');
-            const mainContent = document.getElementById('main-content');
+        // State Check on Load
+        window.onload = function() {
+            const step = localStorage.getItem('hacker_step');
+            if(step === 'decrypting') {
+                showDashboard();
+            } else if(step === 'connecting') {
+                showDashboard();
+                startConnectionProcess();
+            }
+        };
 
-            if(input === "7765aj") {
-                // Correct Key
-                error.style.display = "none";
-                lockScreen.innerHTML = "<h1 style='color:white'>DECRYPTING...</h1>";
-                setTimeout(() => {
-                    lockScreen.style.display = "none";
-                    mainContent.style.display = "flex";
-                    addLog("System Authorized. Welcome back, MEWHACK.");
-                }, 1500);
+        function handleKey() {
+            const key = document.getElementById('keyInput').value;
+            if(key === "7765aj") {
+                localStorage.setItem('hacker_step', 'decrypting');
+                // Redirect and come back
+                window.location.href = directLink;
             } else {
-                // Wrong Key
-                error.style.display = "block";
-                document.getElementById('keyInput').value = "";
+                document.getElementById('error-msg').style.display = 'block';
             }
         }
 
-        // --- DASHBOARD LOGIC ---
-        const terminal = document.getElementById('terminal');
+        function showDashboard() {
+            document.getElementById('lock-screen').classList.remove('active-screen');
+            document.getElementById('loading-screen').classList.add('active-screen');
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.remove('active-screen');
+                document.getElementById('main-content').style.display = 'flex';
+                addLog("System Authorized. Welcome back.");
+            }, 2000);
+        }
+
+        function handleConnect() {
+            localStorage.setItem('hacker_step', 'connecting');
+            window.location.href = directLink;
+        }
+
+        function startConnectionProcess() {
+            const btn = document.getElementById('conBtn');
+            const timer = document.getElementById('timer');
+            let s = 15;
+            btn.disabled = true; btn.style.opacity = "0.5";
+            
+            const t = setInterval(() => {
+                timer.innerText = `UPLINKING: ${s}s`;
+                addLog(`Bypassing node ${s}...`);
+                s--;
+                if(s < 0) {
+                    clearInterval(t);
+                    timer.innerHTML = "<span style='color:var(--neon-green)'>SERVER CONNECTED 🟢</span>";
+                    addLog("ACCESS GRANTED.", "log-success");
+                    localStorage.removeItem('hacker_step'); // Reset for next time
+                }
+            }, 1000);
+        }
+
         function addLog(txt, type = '') {
             const d = document.createElement('div');
-            d.className = type;
-            d.innerText = `> ${txt}`;
-            terminal.prepend(d);
+            d.className = type; d.innerText = `> ${txt}`;
+            document.getElementById('terminal').prepend(d);
         }
 
         function toggleF(cb, name) {
             if(cb.checked) {
                 addLog(`Injecting ${name}...`);
-                setTimeout(() => addLog(`${name}: Activated ✔️`, 'log-success'), 700);
+                setTimeout(() => addLog(`${name}: Active ✔️`, 'log-success'), 800);
             } else {
                 addLog(`${name}: Disabled ❌`, 'log-error');
             }
         }
-
-        function connect() {
-            const btn = document.getElementById('conBtn');
-            const timer = document.getElementById('timer');
-            let s = 15;
-            btn.disabled = true;
-            const t = setInterval(() => {
-                timer.innerText = `UPLINKING: ${s}s`;
-                addLog(`Bypassing security node ${s}...`);
-                s--;
-                if(s < 0) {
-                    clearInterval(t);
-                    timer.innerHTML = "<span style='color:var(--neon-green)'>SERVER CONNECTED 🟢</span>";
-                    addLog("ACCESS GRANTED. DATA STREAM OPEN.", "log-success");
-                }
-            }, 1000);
-        }
     </script>
 </body>
-</html>
+                </html>
